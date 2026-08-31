@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
 import { useEffect } from 'react';
-import { X, Calendar, Image as ImageIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { X, Calendar, Image as ImageIcon, Download } from 'lucide-react';
 
 export function PhotoModal({ photo, onClose }) {
   const { title, imageUrl, date, category } = photo;
@@ -21,26 +22,29 @@ export function PhotoModal({ photo, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div
-        className="relative max-w-4xl w-full max-h-[90vh]"
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.3 }}
+        className="relative max-w-5xl w-full max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors z-10"
+          className="absolute -top-12 right-0 p-2 text-gray-400 hover:text-white transition-colors z-10"
           aria-label="Close"
         >
           <X className="h-6 w-6" />
         </button>
 
         {/* Image */}
-        <div className="bg-black rounded-xl overflow-hidden">
+        <div className="bg-black rounded-2xl overflow-hidden border border-white/10">
           {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={imageUrl}
               alt={title}
@@ -54,8 +58,8 @@ export function PhotoModal({ photo, onClose }) {
         </div>
 
         {/* Caption */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent rounded-b-xl">
-          <h3 className="text-white font-bold text-lg">{title}</h3>
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent rounded-b-2xl">
+          <h3 className="text-white font-bold text-xl font-heading">{title}</h3>
           <div className="flex items-center gap-4 text-gray-300 text-sm mt-1">
             {date && (
               <span className="flex items-center gap-1">
@@ -68,13 +72,13 @@ export function PhotoModal({ photo, onClose }) {
               </span>
             )}
             {category && (
-              <span className="px-2 py-0.5 rounded bg-brand-orange/20 text-brand-orange text-xs">
+              <span className="px-3 py-1 rounded-full bg-brand-orange/20 text-brand-orange text-xs font-semibold">
                 {category}
               </span>
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

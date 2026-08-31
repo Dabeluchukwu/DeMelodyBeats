@@ -1,4 +1,7 @@
-import { Calendar, Music2, ExternalLink } from 'lucide-react';
+"use client";
+
+import { motion } from 'framer-motion';
+import { Calendar, Music2, ExternalLink, Sparkles } from 'lucide-react';
 import { 
   SpotifyIcon, 
   AppleMusicIcon, 
@@ -36,53 +39,62 @@ export function ReleaseCard({ release, onClick, isSelected }) {
   };
 
   return (
-    <div
-      className={`group bg-gray-50 dark:bg-brand-black/50 rounded-lg overflow-hidden border transition-all duration-300 cursor-pointer
-        ${isSelected ? 'border-brand-orange shadow-lg shadow-brand-orange/20' : 'border-gray-200 dark:border-gray-800 hover:border-brand-orange'}
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className={`group bg-white dark:bg-brand-black/50 rounded-2xl overflow-hidden border transition-all duration-500 cursor-pointer
+        ${isSelected ? 'border-brand-orange shadow-2xl shadow-brand-orange/30' : 'border-gray-200 dark:border-gray-800 hover:border-brand-orange hover:shadow-xl hover:shadow-brand-orange/10'}
       `}
       onClick={onClick}
     >
       {/* Cover Art */}
       <div className="aspect-square bg-gray-200 dark:bg-gray-800 relative overflow-hidden">
         {coverArt ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={coverArt}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-brand-orange/10">
-            <Music2 className="h-16 w-16 text-brand-orange/40" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-orange/10 to-brand-gold/10">
+            <Music2 className="h-16 w-16 text-brand-orange/30 group-hover:scale-110 transition-transform duration-300" />
           </div>
         )}
         
         {/* Type Badge */}
-        <span className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold ${typeColors[type] || 'bg-gray-500/20 text-gray-400'}`}>
+        <span className={`absolute top-3 right-3 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm ${typeColors[type] || 'bg-gray-500/20 text-gray-400'}`}>
           {type}
         </span>
 
+        {/* Featured Badge */}
+        {release.isFeatured && (
+          <span className="absolute top-3 left-3 px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-brand-gold to-brand-orange text-brand-black backdrop-blur-sm flex items-center gap-1">
+            <Sparkles className="h-3 w-3" />
+            Featured
+          </span>
+        )}
+
         {/* Click to view overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-          <span className="opacity-0 group-hover:opacity-100 text-white font-semibold text-sm bg-brand-orange px-4 py-2 rounded-lg transition-all duration-300">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+          <span className="opacity-0 group-hover:opacity-100 text-white font-semibold text-sm px-6 py-2.5 bg-brand-orange rounded-xl transition-all duration-300 hover:scale-105">
             View Details
           </span>
         </div>
       </div>
 
       {/* Info */}
-      <div className="p-4">
-        <h3 className="text-lg font-bold font-heading text-brand-orange mb-1">
+      <div className="p-5">
+        <h3 className="text-lg font-bold font-heading text-brand-orange group-hover:text-brand-gold transition-colors truncate">
           {title}
         </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
           <Calendar className="h-3 w-3" />
           {new Date(releaseDate).getFullYear()}
         </p>
 
         {/* Streaming Links with Platform Icons */}
         {streamingLinks.length > 0 && (
-          <div className="mt-3 flex gap-3">
+          <div className="mt-4 flex gap-3 pt-3 border-t border-gray-200 dark:border-gray-800">
             {streamingLinks.map((link) => {
               const Icon = link.icon;
               return (
@@ -91,7 +103,7 @@ export function ReleaseCard({ release, onClick, isSelected }) {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`text-gray-400 ${link.color} transition-colors`}
+                  className={`text-gray-400 ${link.color} transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800`}
                   onClick={(e) => e.stopPropagation()}
                   aria-label={`Listen on ${link.name}`}
                 >
@@ -102,6 +114,6 @@ export function ReleaseCard({ release, onClick, isSelected }) {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useVideos } from '@/hooks/useMedia';
-import { Video, Play, Loader2 } from 'lucide-react';
+import { Video, Play, Loader2, Calendar } from 'lucide-react';
 import { YouTubeIcon } from '@/components/icons/SocialIcons';
 import { VideoModal } from './VideoModal';
 
@@ -36,7 +37,7 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
 
   if (isLoading) {
     return (
-      <div className="text-center py-16">
+      <div className="text-center py-20">
         <Loader2 className="h-12 w-12 animate-spin text-brand-orange mx-auto" />
         <p className="mt-4 text-gray-400">Loading videos...</p>
       </div>
@@ -45,7 +46,7 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
 
   if (error) {
     return (
-      <div className="text-center py-16">
+      <div className="text-center py-20">
         <p className="text-red-400">Failed to load videos. Please try again later.</p>
       </div>
     );
@@ -53,9 +54,11 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
 
   if (!filteredVideos || filteredVideos.length === 0) {
     return (
-      <div className="text-center py-16">
-        <Video className="h-16 w-16 text-brand-orange/40 mx-auto mb-4" />
-        <p className="text-gray-500 dark:text-gray-400">
+      <div className="text-center py-20 bg-white dark:bg-brand-black/30 rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Video className="h-10 w-10 text-gray-400" />
+        </div>
+        <p className="text-gray-500 dark:text-gray-400 font-medium">
           {searchQuery || categoryFilter !== 'all'
             ? `No videos found matching your filters`
             : 'No videos available yet. Check back soon!'}
@@ -72,19 +75,22 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredVideos.map((video) => (
-          <div
+        {filteredVideos.map((video, index) => (
+          <motion.div
             key={video.id}
-            className="group rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer hover:shadow-lg transition-all duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            whileHover={{ y: -4 }}
+            className="group rounded-2xl overflow-hidden bg-white dark:bg-brand-black/50 cursor-pointer hover:shadow-2xl hover:shadow-brand-orange/10 transition-all duration-300 border border-gray-200 dark:border-gray-800"
             onClick={() => setSelectedVideo(video)}
           >
             <div className="aspect-video relative bg-gray-900">
               {video.thumbnail ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
@@ -92,23 +98,28 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
                 </div>
               )}
               {video.category && (
-                <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-xs bg-black/60 text-white">
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-black/70 text-white backdrop-blur-sm">
                   {video.category}
                 </span>
               )}
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-brand-orange/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  className="w-16 h-16 rounded-full bg-gradient-to-r from-brand-orange to-brand-gold flex items-center justify-center shadow-lg shadow-brand-orange/30"
+                >
                   <Play className="h-8 w-8 text-brand-black ml-1" />
-                </div>
+                </motion.div>
               </div>
             </div>
             <div className="p-4">
-              <h3 className="text-lg font-bold font-heading text-brand-orange mb-1">
+              <h3 className="text-lg font-bold font-heading text-brand-orange group-hover:text-brand-gold transition-colors truncate">
                 {video.title}
               </h3>
-              <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {video.date && (
-                  <span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
                     {new Date(video.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
@@ -118,16 +129,21 @@ export function VideoGallery({ categoryFilter = 'all', searchQuery = '' }) {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Results Count */}
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-sm text-gray-500 dark:text-gray-400 mt-6 text-center"
+      >
         Showing {filteredVideos.length} {filteredVideos.length === 1 ? 'video' : 'videos'}
         {categoryFilter !== 'all' && ` in "${categoryFilter}"`}
         {searchQuery && ` matching "${searchQuery}"`}
-      </p>
+      </motion.p>
 
       {selectedVideo && (
         <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
