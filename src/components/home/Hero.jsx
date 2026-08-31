@@ -1,59 +1,166 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { MUSIC_LINKS, SOCIAL_LINKS, BRAND } from "@/lib/constants";
+import { ChevronDown, Play, Music2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Hero() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
-    <section className="bg-brand-black text-white min-h-[90vh] flex items-center relative overflow-hidden">
-      {/* Background glow effect */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-brand-orange blur-3xl" />
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-brand-black">
+      {/* Animated Background Gradients */}
+      <div className="absolute inset-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-brand-orange/10 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-brand-gold/10 blur-[120px] animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] rounded-full bg-brand-orange/5 blur-[150px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Floating Music Notes - Client Only */}
+      {isClient && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(8)].map((_, i) => {
+            // Generate stable random values using a simple deterministic function
+            const seed = (i * 9301 + 49297) % 233280;
+            const left = 10 + (seed % 80);
+            const top = 80 + ((seed * 7) % 20);
+            const size = 20 + ((seed * 13) % 40);
+            const duration = 8 + ((seed * 3) % 6);
+            const delay = (i * 0.5) % 4;
+            const xOffset = (seed % 100) - 50;
+
+            return (
+              <motion.div
+                key={i}
+                className="absolute text-brand-orange/10"
+                initial={{ opacity: 0, y: 0 }}
+                animate={{
+                  opacity: [0, 0.3, 0],
+                  y: [-20, -100, -200],
+                  x: [0, xOffset, xOffset],
+                }}
+                transition={{
+                  duration: duration,
+                  repeat: Infinity,
+                  delay: delay,
+                }}
+                style={{
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  fontSize: `${size}px`,
+                }}
+              >
+                ♪
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-4xl mx-auto text-center"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-orange/20 border border-brand-orange/30 mb-6"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange" />
+            </span>
+            <span className="text-sm font-medium text-brand-orange">Live & Worship</span>
+          </motion.div>
+
           {/* Tagline */}
-          <p className="text-brand-orange font-heading text-sm md:text-base uppercase tracking-widest mb-4 fire-glow">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-brand-orange font-heading text-sm md:text-base uppercase tracking-[0.3em] mb-4"
+          >
             De Melody Beats
-          </p>
+          </motion.p>
 
           {/* Main Title */}
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold leading-tight">
-            <span>More Than </span>
-            <span className="bg-gradient-to-r from-brand-orange to-brand-gold bg-clip-text text-transparent">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1]"
+          >
+            <span className="text-white">More Than </span>
+            <span className="bg-gradient-to-r from-brand-orange via-brand-gold to-brand-orange bg-clip-text text-transparent bg-[length:200%_200%] animate-gradient">
               Music
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Description */}
-          <p className="mt-6 text-gray-300 text-lg md:text-xl max-w-3xl mx-auto">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-6 text-gray-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+          >
             {BRAND.description}
-          </p>
+          </motion.p>
 
           {/* Mission Statement */}
-          <p className="mt-4 text-brand-gold font-heading text-md md:text-lg italic">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="mt-4 text-brand-gold font-heading text-md md:text-lg italic"
+          >
             "{BRAND.mission}"
-          </p>
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="mt-10 flex flex-wrap justify-center gap-4"
+          >
             <a
               href={SOCIAL_LINKS.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 bg-brand-orange text-brand-black hover:bg-brand-gold"
+              className="group relative px-8 py-4 rounded-full font-semibold transition-all duration-300 bg-gradient-to-r from-brand-orange to-brand-gold text-brand-black hover:shadow-lg hover:shadow-brand-orange/30 hover:scale-105 overflow-hidden"
             >
-              Subscribe on YouTube
+              <span className="relative z-10 flex items-center gap-2">
+                <Play className="h-4 w-4" />
+                Subscribe on YouTube
+              </span>
+              <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-brand-orange opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
             <Link
               href="/music"
-              className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 border-2 border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-brand-black"
+              className="px-8 py-4 rounded-full font-semibold transition-all duration-300 border-2 border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-brand-black hover:scale-105 hover:shadow-lg hover:shadow-brand-orange/20"
             >
               Listen Now
             </Link>
-          </div>
+          </motion.div>
 
           {/* Social Icons */}
-          <div className="mt-8 flex justify-center gap-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1 }}
+            className="mt-12 flex justify-center gap-6"
+          >
             <SocialIcon href={SOCIAL_LINKS.youtube} label="YouTube">
               <YouTubeIcon />
             </SocialIcon>
@@ -63,8 +170,8 @@ export function Hero() {
             <SocialIcon href={SOCIAL_LINKS.facebook} label="Facebook">
               <FacebookIcon />
             </SocialIcon>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
@@ -73,15 +180,17 @@ export function Hero() {
 // Social Icon Helper Components
 function SocialIcon({ href, label, children }) {
   return (
-    <a
+    <motion.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 hover:text-brand-orange transition-colors"
+      className="text-gray-400 hover:text-brand-orange transition-colors p-2 rounded-full hover:bg-brand-orange/10"
       aria-label={label}
+      whileHover={{ scale: 1.2 }}
+      whileTap={{ scale: 0.9 }}
     >
       {children}
-    </a>
+    </motion.a>
   );
 }
 
