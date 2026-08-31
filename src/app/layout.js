@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "De Melody Beats - More Than Music",
   description:
-    "A Christian based Chorale focused on Hymns, classicals, folk tunes, cultural, inspirational, contemporary art songs and gospel songs.",
+    "A Christian based Chorale focused on Hymns, classicals, folk tunes, cultural, contemporary art songs and gospel songs.",
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
