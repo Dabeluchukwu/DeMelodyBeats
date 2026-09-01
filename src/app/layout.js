@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,12 +46,12 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
-               {/* Optional: Direct link for older browsers */}
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>
           {children}
+          <InstallPrompt /> {/* ← Add this here */}
         </Providers>
       </body>
     </html>
