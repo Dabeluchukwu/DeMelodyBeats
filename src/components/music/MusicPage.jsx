@@ -49,10 +49,10 @@ export function MusicPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-32 pb-16 bg-white dark:bg-brand-black flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-brand-orange mx-auto" />
-        <p className="mt-4 text-gray-400">Loading music...</p>
-      </div>
+     <div className="min-h-screen pt-32 pb-16 bg-white dark:bg-brand-black flex flex-col items-center justify-center">
+  <Loader2 className="h-12 w-12 animate-spin text-brand-orange" />
+  <p className="mt-4 text-gray-400">Loading music...</p>
+</div>
     );
   }
 
